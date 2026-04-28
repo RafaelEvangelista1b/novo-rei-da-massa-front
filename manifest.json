@@ -1,0 +1,23 @@
+{
+    "name": "Rei da Massa",
+    "short_name": "Rei",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ca3c3f",
+    "description": "Cardápio digital Rei da Massa",
+    "icons": [
+        {
+            "src": "./assets/img/logo.png",
+            "sizes": "192x192",
+            "type": "image/png ",
+            "purpose": "any"
+        },
+        {
+            "src": "./assets/img/logo.png",
+            "sizes": "512x512",
+            "type": "image/png ",
+            "purpose": "any"
+        }
+    ]
+}

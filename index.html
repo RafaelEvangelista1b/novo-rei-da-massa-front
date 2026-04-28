@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rei da Massa - Pastelaria</title>
+     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="./assets/images/logo64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets//images/logo64.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/images/logo64.png">
+    <link rel="icon" type="image/png" href="./assets/images/logo64.png">
+    <link rel="shortcut icon" href="./assets/images/logo64.png" type="image/x-icon">
+    <meta name="msapplication-TileImage" content="./assets/images/logo64.png">
+    <meta property="og:image" content="./assets/images/logo64.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="https://em-content.zobj.net/source/apple/81/stuffed-flatbread_1f959.png">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        playfair: ['Playfair Display', 'serif'],
+                        nunito: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#c8510a',
+                        secondary: '#f5a623',
+                        dark: '#2b1a0e',
+                        cream: '#fdf6ee',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="font-nunito text-dark bg-cream">
+
+    <!-- ================= HEADER ================= -->
+    <header class="flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur sticky top-0 z-40 border-b border-orange-100 shadow-sm">
+
+        <div class="flex items-center gap-3">
+            <span class="text-3xl">🥟</span>
+            <div>
+                <span class="font-playfair text-xl font-black text-primary leading-none block">Rei da Massa</span>
+                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Pastelaria Artesanal</span>
+            </div>
+        </div>
+
+        <button id="menuBtn" class="md:hidden text-3xl text-primary">☰</button>
+
+        <nav class="hidden md:block">
+            <ul class="flex gap-8 text-base font-bold">
+                <li><a href="#cardapio" class="hover:text-primary transition-colors text-dark">Cardápio</a></li>
+                <li><a href="#contato" class="hover:text-primary transition-colors text-dark">Contato</a></li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <!-- Menu Mobile -->
+    <div id="mobileMenu" class="fixed top-0 right-[-100%] w-[70%] h-full bg-white shadow-2xl transition-all duration-300 p-8 md:hidden z-50 border-l border-orange-100">
+
+        <button id="closeBtn" class="text-2xl mb-6 text-primary font-bold">✕</button>
+
+        <div class="mb-8 flex items-center gap-3">
+            <span class="text-3xl">🥟</span>
+            <span class="font-playfair text-lg font-black text-primary">Rei da Massa</span>
+        </div>
+
+        <ul class="flex flex-col gap-6 text-lg font-bold">
+            <li><a href="#cardapio" class="hover:text-primary transition-colors text-dark">Cardápio</a></li>
+            <li><a href="#contato" class="hover:text-primary transition-colors text-dark">Contato</a></li>
+        </ul>
+
+    </div>
+
+    <!-- ================= BANNER ================= -->
+    <section class="bg-orange-50">
+        <div class="max-w-5xl mx-auto px-6 py-12 md:flex md:items-center md:justify-between md:gap-10">
+
+            <article class="md:w-1/2 text-center md:text-left">
+                <span class="inline-block mb-4 bg-secondary text-white text-xs font-extrabold px-3 py-1 rounded-full tracking-wide">
+                    Fresquinho na hora 🔥
+                </span>
+                <h1 class="font-playfair text-4xl md:text-5xl font-black text-dark leading-tight mb-4">
+                    O pastel mais<br><span class="text-primary">saboroso</span> da cidade
+                </h1>
+                <p class="text-base text-gray-600 mb-6 font-semibold">
+                    Massa crocante, recheio generoso e muito carinho em cada pedaço. Feito do jeito certo, do jeito <em>Rei da Massa</em>.
+                </p>
+                <a href="#cardapio" class="inline-block bg-primary text-white px-8 py-4 text-lg font-extrabold rounded-xl shadow-lg hover:bg-orange-700 active:scale-95 transition-all min-h-[48px]">
+                    🥟 Ver o Cardápio
+                </a>
+            </article>
+
+            <figure class="md:w-[45%] mt-10 md:mt-0 text-center">
+                <div class="relative inline-block">
+                    <div class="w-64 h-64 mx-auto rounded-full bg-orange-100 flex items-center justify-center text-[8rem] shadow-inner">
+                    <figure class="md:w-[45%] mt-6 md:mt-0">
+                        <img src="./assets/images/banner.png" alt="logo" class="w-[90%] mx-auto">
+                    </figure>
+                    </div>
+                    <div class="absolute -top-3 -right-3 bg-white rounded-full shadow-lg p-2 text-3xl animate-bounce">✨</div>
+                    <div class="absolute -bottom-2 -left-4 bg-white rounded-full shadow-lg p-2 text-2xl">🔥</div>
+                </div>
+            </figure>
+
+        </div>
+    </section>
+
+    <!-- ================= CARDÁPIO ================= -->
+    <section id="cardapio" class="max-w-[90vw] mx-auto mt-12 pb-32">
+
+        <div class="text-center mb-8">
+            <h2 class="font-playfair text-3xl md:text-4xl font-black text-dark">Nosso Cardápio</h2>
+            <p class="text-gray-500 mt-2 font-semibold">Escolha seu favorito e peça agora</p>
+            <div class="w-16 h-1 rounded-full bg-primary mx-auto mt-3"></div>
+        </div>
+
+        <nav id="nav-categorias" class="overflow-x-auto whitespace-nowrap flex gap-2 mt-6 pb-2 px-1">
+            <div class="animate-pulse flex gap-2">
+                <div class="h-9 w-24 bg-orange-100 rounded-full"></div>
+                <div class="h-9 w-24 bg-orange-100 rounded-full"></div>
+                <div class="h-9 w-24 bg-orange-100 rounded-full"></div>
+            </div>
+        </nav>
+
+        <div id="produtos-container" class="mt-8">
+            <div id="categorias-titulo" class="text-left font-extrabold text-2xl mb-4 font-playfair text-dark">
+                Carregando...
+            </div>
+            <div id="lista-produtos" class="grid grid-cols-2 gap-4"></div>
+        </div>
+
+    </section>
+
+    <script>
+        const API_URL = 'https://aula07-vercel-backpastel.vercel.app/api';
+        const navCategorias = document.getElementById('nav-categorias');
+        const listaProdutos = document.getElementById('lista-produtos');
+        const categoriaTitulo = document.getElementById('categorias-titulo');
+        let categoriasData = [];
+        let categoriasAtivaId = null;
+
+        async function carregarCategorias() {
+            try {
+                const response = await fetch(`${API_URL}/categorias`);
+                categoriasData = await response.json();
+                renderizarBotoesCategorias();
+                if (categoriasData.length > 0) {
+                    selecionarCategoria(categoriasData[0].id, categoriasData[0].nome);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar as categorias:', error);
+                navCategorias.innerHTML = '<p class="text-red-500">Erro ao carregar menu.</p>';
+            }
+        }
+
+        function renderizarBotoesCategorias() {
+            navCategorias.innerHTML = '';
+            categoriasData.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'snap-start px-5 py-2 rounded-full font-bold text-sm transition-all duration-150 cursor-pointer flex-shrink-0 btn-cat bg-orange-100 text-dark';
+                btn.innerText = cat.nome;
+                btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
+                btn.dataset.id = cat.id;
+                navCategorias.appendChild(btn);
+            });
+        }
+
+        async function selecionarCategoria(id, nome) {
+            categoriasAtivaId = id;
+            categoriaTitulo.innerHTML = nome;
+            const botoes = document.querySelectorAll('.btn-cat');
+            botoes.forEach(btn => {
+                if (parseInt(btn.dataset.id) === id) {
+                    btn.classList.add('bg-primary', 'text-white');
+                    btn.classList.remove('bg-orange-100', 'text-dark');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-orange-100', 'text-dark');
+                }
+            });
+            carregarProdutos(id);
+        }
+
+        async function carregarProdutos(categoriaId) {
+            listaProdutos.innerHTML = `
+                <div class="col-span-2 py-10 flex justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-4 border-orange-100 border-t-primary"></div>
+                </div>`;
+            try {
+                const response = await fetch(`${API_URL}/produtos?categoriaId=${categoriaId}`);
+                const produtos = await response.json();
+                renderizarProdutos(produtos);
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos.</p>';
+            }
+        }
+
+        function renderizarProdutos(produtos) {
+            listaProdutos.innerHTML = '';
+
+            if (produtos.length === 0) {
+                listaProdutos.innerHTML = '<p class="col-span-2 text-gray-400 py-10 text-center">Nenhum produto nesta categoria.</p>';
+                return;
+            }
+
+            produtos.forEach(p => {
+                const precoFormatado = p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const imgSource = (p.imagem && p.imagem.startsWith('http'))
+                    ? p.imagem
+                    : `./assets/images/${p.imagem || 'logo.png'}`;
+
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-orange-100 shadow-sm p-3 relative flex flex-col cursor-pointer hover:shadow-md transition-shadow group';
+                card.innerHTML = `
+                    <div class="absolute inset-0 z-0 rounded-2xl cursor-pointer" onclick="abrirModalDetalhes('${p.nome}', ${p.preco}, '${p.descricao || ''}', '${imgSource}', '${p.id}')"></div>
+                    <div class="w-full h-24 bg-orange-50 rounded-xl flex items-center justify-center mb-2 overflow-hidden relative z-10 pointer-events-none">
+                        <img src="${imgSource}" alt="${p.nome}"
+                            class="h-20 w-full object-contain transition-transform duration-300 drop-shadow-sm group-hover:scale-110"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div style="display:none" class="text-5xl w-full h-full flex items-center justify-center">🥟</div>
+                    </div>
+                    <div class="relative z-10 pointer-events-none">
+                        <h4 class="font-bold text-dark text-sm leading-tight">${p.nome}</h4>
+                        <p class="text-primary font-extrabold text-sm mt-1">${precoFormatado}</p>
+                    </div>
+                    <button onclick="adicionarItem('${p.id}', '${p.nome}', ${p.preco})"
+                        class="w-full bg-primary text-white py-2 rounded-xl text-xs font-extrabold mt-3 z-10 relative shadow-md hover:bg-orange-700 active:scale-95 transition-all">
+                        + Adicionar
+                    </button>
+                `;
+                listaProdutos.appendChild(card);
+            });
+        }
+
+        carregarCategorias();
+    </script>
+
+    <!-- ================= FOOTER ================= -->
+    <footer id="contato" class="mt-24 bg-dark text-white py-12 px-6">
+        <div class="max-w-xl mx-auto text-center">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <span class="text-3xl">🥟</span>
+                <h3 class="font-playfair text-2xl font-black">Rei da Massa</h3>
+            </div>
+            <div class="w-10 h-px bg-secondary mx-auto mb-6"></div>
+            <div class="space-y-2 text-sm font-semibold text-orange-100">
+                <p>📍 Rua Prof. Toledo, 500, centro - Sorocaba</p>
+                <p>📞 WhatsApp: (15) 99833-5768</p>
+                <p>🕛 Aberto todos os dias das 10h às 22h</p>
+            </div>
+            <p class="mt-8 text-xs text-orange-300">© 2026 Rei da Massa · Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Botão WhatsApp -->
+    <a href="https://wa.me/5515991456699" target="_blank" class="fixed right-5 bottom-5">
+        <img src="./assets/images/whatsapp.png" alt="link-whatsapp" class="h-[3.25rem]">
+    </a>
+
+    <!-- MODAL DE DETALHES DO PRODUTO -->
+    <div id="detalhes-modal"
+        class="fixed inset-0 bg-black/70 z-[80] flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col"
+            id="detalhes-modal-content">
+
+            <button onclick="fecharModalDetalhes()"
+                class="absolute top-4 right-4 bg-white text-dark w-10 h-10 rounded-full flex justify-center items-center font-bold text-2xl shadow z-10 hover:text-primary active:scale-90 transition-all">&times;</button>
+
+            <div class="w-full h-64 bg-orange-50 flex justify-center items-center p-8">
+                <img id="detalhes-img" src="" alt="Produto"
+                    class="w-full h-full object-contain drop-shadow-xl transition-transform duration-500 hover:scale-105">
+            </div>
+
+            <div class="p-6">
+                <h2 id="detalhes-nome" class="font-playfair text-2xl font-black text-dark mb-1 leading-tight">Nome do Produto</h2>
+                <p id="detalhes-preco" class="text-xl font-black text-primary mb-4">R$ 0,00</p>
+                <div class="bg-orange-50 rounded-xl p-4 mb-6">
+                    <p id="detalhes-desc" class="text-gray-600 text-sm leading-relaxed font-medium">Descrição do produto...</p>
+                </div>
+
+                <button id="detalhes-btn-add"
+                    class="w-full bg-primary text-white py-4 rounded-xl text-base font-extrabold shadow-lg hover:bg-orange-700 active:scale-95 transition-all flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Adicionar ao Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ CARRINHO FIXO -->
+    <div id="carrinho-footer"
+        class="fixed bottom-0 left-0 w-full bg-primary text-white p-4 z-50 shadow-lg transform translate-y-full transition-transform duration-300 flex justify-between items-center cursor-pointer"
+        onclick="abrirModalCarrinho()">
+        <div>
+            <p class="text-sm font-semibold opacity-90">Resumo do Pedido</p>
+            <p class="text-xl font-extrabold">Total: <span id="carrinho-total">R$ 0,00</span></p>
+        </div>
+        <button class="bg-white text-primary px-5 py-2 rounded-xl font-extrabold shadow-md active:scale-95 transition-all text-sm">
+            Ver Carrinho 🛒
+        </button>
+    </div>
+
+    <!-- MODAL DO CARRINHO -->
+    <div id="carrinho-modal"
+        class="fixed inset-0 bg-black/60 z-[60] flex flex-col justify-end sm:justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
+
+        <div class="bg-white w-full sm:w-[500px] h-[85vh] sm:h-auto sm:max-h-[85vh] rounded-t-3xl sm:rounded-2xl flex flex-col transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300"
+            id="carrinho-modal-content">
+
+            <div class="p-5 border-b border-orange-100 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🛒</span>
+                    <h2 class="font-playfair text-2xl font-black text-dark">Seu Pedido</h2>
+                </div>
+                <button onclick="fecharModalCarrinho()"
+                    class="text-3xl font-bold text-gray-400 hover:text-dark focus:outline-none">&times;</button>
+            </div>
+
+            <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4"></div>
+
+            <div class="p-5 border-t border-orange-100 bg-orange-50 rounded-b-3xl sm:rounded-b-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-base font-bold">Total do Pedido:</span>
+                    <span id="modal-carrinho-total" class="text-2xl font-black text-primary">R$ 0,00</span>
+                </div>
+                <button onclick="fecharPedido()" id="btn-fechar-pedido"
+                    class="w-full bg-primary text-white py-3 rounded-xl text-lg font-extrabold shadow-lg hover:bg-orange-700 active:scale-95 transition-all">
+                    Fechar Pedido 📍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- script menu hamburguer -->
+    <script>
+        const menuBtn = document.getElementById("menuBtn");
+        const closeBtn = document.getElementById("closeBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        menuBtn.addEventListener("click", () => { mobileMenu.style.right = "0"; });
+        closeBtn.addEventListener("click", () => { mobileMenu.style.right = "-100%"; });
+    </script>
+
+    <!-- scripts carrinho e modais -->
+    <script>
+        const modalDetalhes = document.getElementById('detalhes-modal');
+        const modalDetalhesContent = document.getElementById('detalhes-modal-content');
+
+        function abrirModalDetalhes(nome, preco, desc, img, id) {
+            if (navigator.vibrate) navigator.vibrate(40);
+            document.getElementById('detalhes-nome').innerText = nome;
+            document.getElementById('detalhes-preco').innerText = preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('detalhes-desc').innerText = desc || 'Sem descrição disponível.';
+            document.getElementById('detalhes-img').src = img;
+            document.getElementById('detalhes-btn-add').onclick = function () {
+                adicionarItem(id, nome, preco);
+                fecharModalDetalhes();
+            };
+            modalDetalhes.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalDetalhesContent.classList.remove('scale-95');
+                modalDetalhesContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function fecharModalDetalhes() {
+            modalDetalhesContent.classList.remove('scale-100');
+            modalDetalhesContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalDetalhes.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        let carrinho = [];
+        const carrinhoFooter = document.getElementById('carrinho-footer');
+        const carrinhoTotalSpan = document.getElementById('carrinho-total');
+        const modal = document.getElementById('carrinho-modal');
+        const modalContent = document.getElementById('carrinho-modal-content');
+        const itensContainer = document.getElementById('carrinho-itens-container');
+        const modalTotalSpan = document.getElementById('modal-carrinho-total');
+
+        function inicializarCarrinho() {
+            const carrinhoSalvo = localStorage.getItem('reimassa_carrinho');
+            if (carrinhoSalvo) {
+                carrinho = JSON.parse(carrinhoSalvo);
+                atualizarInterfaceCart();
+            }
+        }
+
+        function adicionarItem(id, nome, preco) {
+            if (navigator.vibrate) navigator.vibrate(200);
+            const index = carrinho.findIndex(item => item.id === id);
+            if (index !== -1) {
+                carrinho[index].quantidade += 1;
+            } else {
+                carrinho.push({ id, nome, preco: parseFloat(preco), quantidade: 1 });
+            }
+            atualizarCarrinho();
+        }
+
+        function abrirModalCarrinho() {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-full', 'scale-95');
+            }, 10);
+        }
+
+        function fecharModalCarrinho() {
+            modalContent.classList.add('translate-y-full', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
+
+        function aumentarQuantidade(id) {
+            const index = carrinho.findIndex(item => item.id === id);
+            if (index !== -1) {
+                carrinho[index].quantidade += 1;
+                atualizarCarrinho();
+                if (navigator.vibrate) navigator.vibrate(50);
+            }
+        }
+
+        function diminuirQuantidade(id) {
+            const index = carrinho.findIndex(item => item.id === id);
+            if (index !== -1) {
+                if (carrinho[index].quantidade > 1) {
+                    carrinho[index].quantidade -= 1;
+                } else {
+                    carrinho.splice(index, 1);
+                    if (carrinho.length === 0) fecharModalCarrinho();
+                }
+                atualizarCarrinho();
+                if (navigator.vibrate) navigator.vibrate(50);
+            }
+        }
+
+        function atualizarCarrinho() {
+            localStorage.setItem('reimassa_carrinho', JSON.stringify(carrinho));
+            atualizarInterfaceCart();
+        }
+
+        function atualizarInterfaceCart() {
+            if (carrinho.length === 0) {
+                carrinhoFooter.classList.add('translate-y-full');
+                return;
+            }
+            const total = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+            const totalFormatado = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            carrinhoTotalSpan.innerText = totalFormatado;
+            modalTotalSpan.innerText = totalFormatado;
+            carrinhoFooter.classList.remove('translate-y-full');
+            renderizarItensModal();
+        }
+
+        function renderizarItensModal() {
+            if (!itensContainer) return;
+            itensContainer.innerHTML = '';
+            carrinho.forEach(item => {
+                const subTotal = (item.preco * item.quantidade).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const precoUnit = item.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const divItem = document.createElement('div');
+                divItem.className = 'flex justify-between items-center border-b border-orange-100 pb-4';
+                divItem.innerHTML = `
+                    <div class="flex-1">
+                        <h4 class="font-bold text-dark text-base">${item.nome}</h4>
+                        <p class="text-xs text-gray-500">${precoUnit} un.</p>
+                        <p class="font-extrabold text-primary mt-0.5">${subTotal}</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-orange-50 p-2 rounded-xl border border-orange-100">
+                        <button onclick="diminuirQuantidade('${item.id}')" class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-lg shadow-sm hover:text-primary active:scale-95 transition-all">-</button>
+                        <span class="font-extrabold text-base w-5 text-center text-dark">${item.quantidade}</span>
+                        <button onclick="aumentarQuantidade('${item.id}')" class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-lg shadow-sm hover:text-primary active:scale-95 transition-all">+</button>
+                    </div>
+                `;
+                itensContainer.appendChild(divItem);
+            });
+        }
+
+        function fecharPedido() {
+            if (carrinho.length === 0) return;
+            const btnPedido = document.getElementById('btn-fechar-pedido');
+            if (!btnPedido) return;
+            const btnOriginalText = btnPedido.innerHTML;
+            btnPedido.innerText = 'Buscando localização... 📍';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (posicao) => {
+                        const lat = posicao.coords.latitude;
+                        const lon = posicao.coords.longitude;
+                        btnPedido.innerHTML = btnOriginalText;
+                        alert(`Pedido fechado com sucesso! 🥟\nSua localização: ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+                        carrinho = [];
+                        fecharModalCarrinho();
+                        atualizarCarrinho();
+                    },
+                    (erro) => {
+                        btnPedido.innerHTML = btnOriginalText;
+                        alert('Pedido fechado! (Sem acesso ao GPS)');
+                        carrinho = [];
+                        fecharModalCarrinho();
+                        atualizarCarrinho();
+                    }
+                );
+            } else {
+                alert('Pedido fechado com sucesso! 🥟');
+                carrinho = [];
+                fecharModalCarrinho();
+                atualizarCarrinho();
+            }
+        }
+
+        inicializarCarrinho();
+
+        if('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Registrado no Porto! 🫓', reg))
+                .catch(err => console.error('Erro ao preparar a massa: ', err));
+            });
+        }
+    </script>
+
+</body>
+</html>

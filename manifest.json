@@ -8,13 +8,13 @@
     "description": "Cardápio digital Rei da Massa",
     "icons": [
         {
-            "src": "./assets/img/logo.png",
+            "src": "./assets/images/logo64.png",
             "sizes": "192x192",
             "type": "image/png ",
             "purpose": "any"
         },
         {
-            "src": "./assets/img/logo.png",
+            "src": "./assets/images/logo512.png",
             "sizes": "512x512",
             "type": "image/png ",
             "purpose": "any"

@@ -10,7 +10,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-    event.waitUtil(
+    event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('preparando a massa! 🥐');
             return cache.addAll(ASSETS);
@@ -19,7 +19,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respodWith(
+    event.respondWith(
         caches.match(event.request).then((response) => {
             return response || fetch(event.request);
         })

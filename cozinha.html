@@ -1,69 +1,216 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rei da Massa – Cozinha</title>
+<html lang="pt-br">
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rei da Massa - Painel da Cozinha</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        barlow: ['Barlow', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#c95513',  /* Laranja Terracota do Rei da Massa */
+                        dark: '#2e1c12',     /* Marrom Escuro nobre para os textos */
+                        muted: '#8c766c',    /* Tom neutro quente para textos secundários */
+                        footer: '#3d2b24',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fdf8f2; /* Fundo creme/marfim idêntico ao da imagem */
+        }
+    </style>
 </head>
 
-<body class="bg-[#f5efe6] text-[#3e2c23] font-sans">
+<body class="font-barlow text-dark w-full m-0 min-h-screen flex flex-col">
 
-<!-- HEADER -->
-<header class="bg-white px-5 py-4 flex justify-between items-center shadow-md">
-  <div class="flex items-center gap-2 font-bold text-lg">
-    🥟 Rei da <span class="text-[#d35400]">Massa</span>
-  </div>
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <img src="assets/images/logo512.png" onerror="this.src='../img/logo.png'; this.onerror=null;"
+                alt="Rei da Massa" class="h-12 w-auto">
+            <h1 class="text-2xl font-bold text-primary hidden md:block border-l-2 border-primary pl-4">Painel da Cozinha
+            </h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="status-conexao" class="flex items-center gap-2 text-sm font-bold text-green-600">
+                <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                Online
+            </div>
+            <button onclick="carregarPedidos()"
+                class="bg-dark text-white px-4 py-2 rounded font-bold hover:bg-black transition">
+                Atualizar
+            </button>
+        </div>
+    </header>
 
-  <div class="bg-red-100 text-red-500 px-3 py-1 rounded-full text-xs font-bold">
-    ● Offline
-  </div>
-</header>
+    <main class="flex-grow p-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-black text-dark">Pedidos Recebidos</h2>
+                <span id="contador-pedidos" class="bg-primary text-white px-3 py-1 rounded-full font-bold text-sm">0
+                    pedidos</span>
+            </div>
 
-<!-- MAIN -->
-<main class="p-6 max-w-3xl mx-auto">
+            <div id="pedidos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="text-muted col-span-full text-center py-10">Carregando pedidos...</p>
+            </div>
+        </div>
+    </main>
 
-  <!-- TOPO -->
-  <div class="flex justify-between items-center mb-5">
-    <h1 class="text-2xl font-bold">Pedidos da Cozinha</h1>
-    <div class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm">
-      0 pedidos
-    </div>
-  </div>
+    <script>
+        // URL do Backend onde a nova rota foi publicada (na Vercel)
+        const URL_API = 'https://aula07-vercel-backpastel.vercel.app/api/pedidos';
 
-  <!-- ESTADO VAZIO -->
-  <div class="text-center mt-24 opacity-90">
-    
-    <!-- ÍCONE -->
-    <div class="text-[90px] mb-5 drop-shadow-lg">
-      🥟
-    </div>
+        // Função para buscar os pedidos na API
+        async function carregarPedidos() {
+            const container = document.getElementById('pedidos-container');
+            const contador = document.getElementById('contador-pedidos');
+            const statusConexao = document.getElementById('status-conexao');
 
-    <h2 class="text-lg font-bold mb-2">
-      Nenhum pedido no momento
-    </h2>
+            try {
+                // Indicador visual de carregando (opcional, mas bom pra UX)
+                statusConexao.innerHTML = '<span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span> Atualizando...';
+                statusConexao.className = 'flex items-center gap-2 text-sm font-bold text-yellow-600';
 
-    <p class="text-gray-500">
-      Os pedidos aparecerão aqui assim que forem feitos no sistema.
-    </p>
+                const resposta = await fetch(URL_API);
 
-    <button 
-      onclick="simularPedidos()"
-      class="mt-5 px-5 py-2 bg-[#d35400] text-white rounded-lg font-bold hover:bg-[#b84300] transition">
-      Simular pedidos
-    </button>
+                if (!resposta.ok) throw new Error('Erro ao buscar pedidos');
 
-  </div>
+                const pedidos = await resposta.json();
+                renderizarPedidos(pedidos);
 
-</main>
+                // Atualiza contador
+                contador.innerText = `${pedidos.length} pedido(s)`;
 
-<script>
-  function simularPedidos() {
-    alert("Aqui você vai conectar com seu sistema de pedidos depois 😉");
-  }
-</script>
+                // Volta o status para online
+                setTimeout(() => {
+                    statusConexao.innerHTML = '<span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span> Online';
+                    statusConexao.className = 'flex items-center gap-2 text-sm font-bold text-green-600';
+                }, 500);
 
+            } catch (erro) {
+                console.error("Erro ao carregar pedidos:", erro);
+                container.innerHTML = `
+                    <div class="col-span-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                      <strong class="font-bold">Ops!</strong>
+                      <span class="block sm:inline">Não foi possível carregar os pedidos da nuvem. Verifique a conexão com a API.</span>
+                    </div>`;
+
+                statusConexao.innerHTML = '<span class="w-3 h-3 bg-red-500 rounded-full"></span> Offline';
+                statusConexao.className = 'flex items-center gap-2 text-sm font-bold text-red-600';
+            }
+        }
+
+        // Função para desenhar os pedidos na tela
+        function renderizarPedidos(pedidos) {
+            const container = document.getElementById('pedidos-container');
+            container.innerHTML = '';
+
+            if (pedidos.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full flex flex-col items-center justify-center py-16 opacity-50">
+                        <svg class="w-16 h-16 text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        <p class="text-xl font-bold text-dark">Nenhum pedido pendente.</p>
+                        <p class="text-muted">A cozinha está livre por enquanto!</p>
+                    </div>`;
+                return;
+            }
+
+            // Para cada pedido, cria um Card
+            pedidos.forEach(pedido => {
+                // Tenta transformar a coluna de itens em array caso tenha vindo como texto (JSON) do banco
+                let itens = [];
+                try {
+                    itens = typeof pedido.itens === 'string' ? JSON.parse(pedido.itens) : pedido.itens;
+                } catch (e) {
+                    console.error("Erro ao converter itens do pedido:", e);
+                }
+
+                if (!itens || !Array.isArray(itens)) itens = [];
+
+                // Monta o HTML da lista de itens
+                let htmlItens = itens.map(item => `
+                    <li class="flex justify-between border-b border-gray-100 py-2">
+                        <span class="font-semibold text-dark">${item.quantidade || 1}x ${item.nome || 'Produto'}</span> 
+                        <span class="text-muted">R$ ${(item.preco || 0).toFixed(2)}</span>
+                    </li>
+                `).join('');
+
+                // Formata a data (se existir)
+                let dataFormatada = 'Data desconhecida';
+                if (pedido.created_at) {
+                    const dataObj = new Date(pedido.created_at);
+                    dataFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' - ' + dataObj.toLocaleDateString('pt-BR');
+                }
+
+                // Cria o Card do HTML
+                const card = `
+                    <div class="bg-white border-t-4 border-primary shadow-lg rounded-xl p-5 flex flex-col hover:shadow-xl transition duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="text-xl font-black text-dark">Pedido #${pedido.id}</h2>
+                                <span class="text-xs text-muted">${dataFormatada}</span>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-black uppercase px-2 py-1 rounded">
+                                ${pedido.status || 'Pendente'}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4 bg-gray-50 p-3 rounded-lg text-sm">
+                            <p class="mb-1"><strong>Cliente:</strong> <span class="text-gray-700">${pedido.cliente_nome || 'Não informado'}</span></p>
+                            <p><strong>Endereço:</strong> <span class="text-gray-700">${pedido.cliente_endereco || 'Não informado'}</span></p>
+                        </div>
+                        
+                        <div class="flex-grow mb-4">
+                            <h3 class="font-bold text-dark mb-2 uppercase text-sm">Itens do Pedido:</h3>
+                            <ul class="text-sm">
+                                ${htmlItens}
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-auto pt-4 border-t border-gray-200 flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-xs text-muted font-bold uppercase">Total a pagar</span>
+                                <span class="font-black text-xl text-primary">R$ ${(pedido.total || 0).toFixed(2)}</span>
+                            </div>
+                            <button onclick="concluirPedido(this)" class="bg-green-600 text-white px-5 py-2 rounded-lg font-bold hover:bg-green-700 transition transform hover:scale-105">
+                                Pronto ✓
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Função simulação para o botão de concluir
+        function concluirPedido(btn) {
+            const card = btn.closest('.bg-white');
+            card.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
+            btn.innerText = 'Finalizado';
+            btn.classList.replace('bg-green-600', 'bg-gray-400');
+            btn.classList.replace('hover:bg-green-700', 'hover:bg-gray-400');
+        }
+
+        // Inicia carregando os pedidos e configura atualização automática a cada 10 segundos
+        carregarPedidos();
+        setInterval(carregarPedidos, 10000);
+    </script>
 </body>
+
 </html>

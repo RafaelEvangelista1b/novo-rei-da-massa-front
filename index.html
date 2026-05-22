@@ -45,7 +45,7 @@
     <header class="flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur sticky top-0 z-40 border-b border-orange-100 shadow-sm">
 
         <div class="flex items-center gap-3">
-            <span class="text-3xl">🥟</span>
+            <span class="text-3xl"></span>
             <div>
                 <span class="font-playfair text-xl font-black text-primary leading-none block">Rei da Massa</span>
                 <span class="text-xs font-bold text-secondary uppercase tracking-widest">Pastelaria Artesanal</span>
@@ -69,7 +69,7 @@
         <button id="closeBtn" class="text-2xl mb-6 text-primary font-bold">✕</button>
 
         <div class="mb-8 flex items-center gap-3">
-            <span class="text-3xl">🥟</span>
+            <span class="text-3xl"></span>
             <span class="font-playfair text-lg font-black text-primary">Rei da Massa</span>
         </div>
 
@@ -86,7 +86,7 @@
 
             <article class="md:w-1/2 text-center md:text-left">
                 <span class="inline-block mb-4 bg-secondary text-white text-xs font-extrabold px-3 py-1 rounded-full tracking-wide">
-                    Fresquinho na hora 🔥
+                    Fresquinho na hora 
                 </span>
                 <h1 class="font-playfair text-4xl md:text-5xl font-black text-dark leading-tight mb-4">
                     O pastel mais<br><span class="text-primary">saboroso</span> da cidade
@@ -95,7 +95,7 @@
                     Massa crocante, recheio generoso e muito carinho em cada pedaço. Feito do jeito certo, do jeito <em>Rei da Massa</em>.
                 </p>
                 <a href="#cardapio" class="inline-block bg-primary text-white px-8 py-4 text-lg font-extrabold rounded-xl shadow-lg hover:bg-orange-700 active:scale-95 transition-all min-h-[48px]">
-                    🥟 Ver o Cardápio
+                    Ver o Cardápio
                 </a>
             </article>
 
@@ -107,7 +107,7 @@
                     </figure>
                     </div>
                     <div class="absolute -top-3 -right-3 bg-white rounded-full shadow-lg p-2 text-3xl animate-bounce">✨</div>
-                    <div class="absolute -bottom-2 -left-4 bg-white rounded-full shadow-lg p-2 text-2xl">🔥</div>
+                    <div class="absolute -bottom-2 -left-4 bg-white rounded-full shadow-lg p-2 text-2xl">✨</div>
                 </div>
             </figure>
 
@@ -223,12 +223,16 @@
                 card.className = 'bg-white rounded-2xl border border-orange-100 shadow-sm p-3 relative flex flex-col cursor-pointer hover:shadow-md transition-shadow group';
                 card.innerHTML = `
                     <div class="absolute inset-0 z-0 rounded-2xl cursor-pointer" onclick="abrirModalDetalhes('${p.nome}', ${p.preco}, '${p.descricao || ''}', '${imgSource}', '${p.id}')"></div>
-                    <div class="w-full h-24 bg-orange-50 rounded-xl flex items-center justify-center mb-2 overflow-hidden relative z-10 pointer-events-none">
-                        <img src="${imgSource}" alt="${p.nome}"
-                            class="h-20 w-full object-contain transition-transform duration-300 drop-shadow-sm group-hover:scale-110"
-                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div style="display:none" class="text-5xl w-full h-full flex items-center justify-center">🥟</div>
+                  <div class="w-full h-24 bg-orange-50 rounded-xl overflow-hidden relative z-10 pointer-events-none">
+                    <img src="${imgSource}" alt="${p.nome}"
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        
+                    <div style="display:none"
+                        class="text-5xl w-full h-full flex items-center justify-center">
+                        🥟
                     </div>
+                </div>
                     <div class="relative z-10 pointer-events-none">
                         <h4 class="font-bold text-dark text-sm leading-tight">${p.nome}</h4>
                         <p class="text-primary font-extrabold text-sm mt-1">${precoFormatado}</p>
@@ -249,7 +253,7 @@
     <footer id="contato" class="mt-24 bg-dark text-white py-12 px-6">
         <div class="max-w-xl mx-auto text-center">
             <div class="flex items-center justify-center gap-3 mb-4">
-                <span class="text-3xl">🥟</span>
+                <span class="text-3xl"></span>
                 <h3 class="font-playfair text-2xl font-black">Rei da Massa</h3>
             </div>
             <div class="w-10 h-px bg-secondary mx-auto mb-6"></div>
@@ -276,9 +280,9 @@
             <button onclick="fecharModalDetalhes()"
                 class="absolute top-4 right-4 bg-white text-dark w-10 h-10 rounded-full flex justify-center items-center font-bold text-2xl shadow z-10 hover:text-primary active:scale-90 transition-all">&times;</button>
 
-            <div class="w-full h-64 bg-orange-50 flex justify-center items-center p-8">
+            <div class="w-full h-64 bg-orange-50 flex justify-center items-center overflow-hidden">
                 <img id="detalhes-img" src="" alt="Produto"
-                    class="w-full h-full object-contain drop-shadow-xl transition-transform duration-500 hover:scale-105">
+                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
             </div>
 
             <div class="p-6">
@@ -308,40 +312,35 @@
             <p class="text-xl font-extrabold">Total: <span id="carrinho-total">R$ 0,00</span></p>
         </div>
         <button class="bg-white text-primary px-5 py-2 rounded-xl font-extrabold shadow-md active:scale-95 transition-all text-sm">
-            Ver Carrinho 🛒
+            Ver Carrinho 
         </button>
     </div>
 
-    <!-- MODAL DO CARRINHO -->
+    <!-- MODAL CARRINHO -->
     <div id="carrinho-modal"
-        class="fixed inset-0 bg-black/60 z-[60] flex flex-col justify-end sm:justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
-
-        <div class="bg-white w-full sm:w-[500px] h-[85vh] sm:h-auto sm:max-h-[85vh] rounded-t-3xl sm:rounded-2xl flex flex-col transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300"
+        class="fixed inset-0 bg-black/60 z-[60] flex flex-col justify-end items-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white w-full sm:w-[500px] max-h-[85vh] rounded-t-3xl flex flex-col transform translate-y-full transition-transform duration-300"
             id="carrinho-modal-content">
-
-            <div class="p-5 border-b border-orange-100 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">🛒</span>
-                    <h2 class="font-playfair text-2xl font-black text-dark">Seu Pedido</h2>
-                </div>
-                <button onclick="fecharModalCarrinho()"
-                    class="text-3xl font-bold text-gray-400 hover:text-dark focus:outline-none">&times;</button>
+            <div class="p-5 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-bold">Seu Carrinho</h2>
+                <button onclick="fecharModalCarrinho()" class="text-3xl font-bold">&times;</button>
             </div>
-
-            <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4"></div>
-
-            <div class="p-5 border-t border-orange-100 bg-orange-50 rounded-b-3xl sm:rounded-b-2xl">
+            <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4">
+                <!-- Itens -->
+            </div>
+            <div class="p-5 border-t bg-gray-50 rounded-b-3xl">
+                <input type="text" id="cliente-nome" placeholder="Seu Nome Completo" class="w-full mb-3 p-3 border border-gray-300 rounded-lg outline-none focus:border-primary">
+                <input type="text" id="cliente-endereco" placeholder="Endereço de Entrega (Rua, Número, Bairro)" class="w-full mb-4 p-3 border border-gray-300 rounded-lg outline-none focus:border-primary">
+                
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-base font-bold">Total do Pedido:</span>
+                    <span class="text-lg font-bold">Total:</span>
                     <span id="modal-carrinho-total" class="text-2xl font-black text-primary">R$ 0,00</span>
                 </div>
-                <button onclick="fecharPedido()" id="btn-fechar-pedido"
-                    class="w-full bg-primary text-white py-3 rounded-xl text-lg font-extrabold shadow-lg hover:bg-orange-700 active:scale-95 transition-all">
-                    Fechar Pedido 📍
-                </button>
+                <button id="btn-fechar-pedido" onclick="fecharPedido()" class="w-full bg-primary text-white py-3 rounded-xl text-lg font-bold">Fechar Pedido</button>
             </div>
         </div>
     </div>
+
 
     <!-- script menu hamburguer -->
     <script>
@@ -489,49 +488,84 @@
             });
         }
 
-        function fecharPedido() {
-            if (carrinho.length === 0) return;
-            const btnPedido = document.getElementById('btn-fechar-pedido');
-            if (!btnPedido) return;
-            const btnOriginalText = btnPedido.innerHTML;
-            btnPedido.innerText = 'Buscando localização... 📍';
+    async function fecharPedido() {
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (posicao) => {
-                        const lat = posicao.coords.latitude;
-                        const lon = posicao.coords.longitude;
-                        btnPedido.innerHTML = btnOriginalText;
-                        alert(`Pedido fechado com sucesso! 🥟\nSua localização: ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
-                        carrinho = [];
-                        fecharModalCarrinho();
-                        atualizarCarrinho();
+            const nome = document.getElementById('cliente-nome').value;
+            const endereco = document.getElementById('cliente-endereco').value;
+
+            if (!nome || !endereco) {
+                alert("Por favor, preencha seu nome e endereço de entrega!");
+                return;
+            }
+
+            const total = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+            
+            const payloadPedido = {
+                cliente_nome: nome,
+                cliente_endereco: endereco,
+                itens: carrinho,
+                total: total
+            };
+
+            const btnFechar = document.getElementById('btn-fechar-pedido');
+            btnFechar.innerText = "Enviando...";
+            btnFechar.disabled = true;
+            btnFechar.classList.add("opacity-50");
+
+            try {
+                const resposta = await fetch(`${API_URL}/pedidos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    (erro) => {
-                        btnPedido.innerHTML = btnOriginalText;
-                        alert('Pedido fechado! (Sem acesso ao GPS)');
-                        carrinho = [];
-                        fecharModalCarrinho();
-                        atualizarCarrinho();
-                    }
-                );
-            } else {
-                alert('Pedido fechado com sucesso! 🥟');
+                    body: JSON.stringify(payloadPedido)
+                });
+
+                if (!resposta.ok) throw new Error('Erro ao enviar pedido');
+
+                alert("Pedido enviado com sucesso para a cozinha!");
+                
+                // Limpar tudo
+                document.getElementById('cliente-nome').value = '';
+                document.getElementById('cliente-endereco').value = '';
                 carrinho = [];
-                fecharModalCarrinho();
                 atualizarCarrinho();
+                fecharModalCarrinho();
+            } catch (erro) {
+                console.error(erro);
+                alert("Ops! Ocorreu um problema de conexão. Tente novamente.");
+            } finally {
+                btnFechar.innerText = "Fechar Pedido";
+                btnFechar.disabled = false;
+                btnFechar.classList.remove("opacity-50");
             }
         }
 
+        function inicializarCarrinho() {
+            const salvo = localStorage.getItem('haruy_carrinho');
+            if (salvo) {
+                carrinho = JSON.parse(salvo);
+                atualizarCarrinho();
+            }
+        }
+        
+        carregarCategorias();
         inicializarCarrinho();
 
-        if('serviceWorker' in navigator) {
+        // 🚀 AULA 12: REGISTRANDO O SERVICE WORKER (PARA TRANSFORMAR EM PWA)
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker Registrado no Porto! 🫓', reg))
-                .catch(err => console.error('Erro ao preparar a massa: ', err));
+                .then(reg => console.log('Service Worker Registrado no Porto! 🍱', reg))
+                .catch(err => console.error('Erro ao preparar o sushi: ', err));
             });
         }
+
+        
     </script>
 
 </body>

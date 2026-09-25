@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rei da Massa</string>
+    <string name="title_activity_main">Rei da Massa</string>
+    <string name="package_name">com.pastel.reimassa</string>
+    <string name="custom_url_scheme">com.pastel.reimassa</string>
+</resources>

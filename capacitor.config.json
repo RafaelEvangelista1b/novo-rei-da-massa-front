@@ -1,0 +1,6 @@
+﻿{
+  "appId": "com.pastel.reimassa",
+  "appName": "Rei da Massa",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

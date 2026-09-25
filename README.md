@@ -1,6 +1,6 @@
-﻿# Rei da Massa — Android com Capacitor
+﻿# Rei da Massa — Capacitor + Supabase
 
-O projeto continua sendo um site estático em HTML5, Tailwind CSS e JavaScript. `index.html` é a página inicial; `cozinha.html` e `assets/` também são empacotados no aplicativo.
+O projeto é um site estático em HTML5, Tailwind CSS e JavaScript, empacotado para Android com Capacitor. Ele não usa React nem Vite. `index.html` é a página inicial e `cozinha.html` é o painel da cozinha.
 
 ## Requisitos
 
@@ -8,43 +8,61 @@ O projeto continua sendo um site estático em HTML5, Tailwind CSS e JavaScript. 
 - Android Studio com Android SDK instalado
 - JDK 17
 
-## Preparar e sincronizar
-
-Na primeira vez, instale as dependências e gere os arquivos web:
+## Instalar dependências
 
 ```bash
 npm install
+```
+
+## Configurar o Supabase
+
+Copie `.env.example` para `.env.local` e preencha:
+
+```env
+VITE_SUPABASE_URL=https://SEU-PROJETO.supabase.co
+VITE_SUPABASE_ANON_KEY=SUA_CHAVE_PUBLICA
+SUPABASE_PRODUCTS_TABLE=produtos
+```
+
+Use somente a chave pública/anon apropriada para clientes. Nunca use `service_role`: o build bloqueia uma chave JWT com essa role. A URL e a chave pública serão incluídas nos arquivos web e no APK; proteja os dados com RLS no Supabase.
+
+O cardápio executa `SELECT *` na tabela configurada (por padrão, `produtos`) e exibe os produtos para a categoria selecionada. O código existente sugere os campos `id`, `nome`, `preco`, `descricao`, `imagem` e `categoriaId` ou `categoria_id`. A leitura depende de uma política RLS que permita selecionar os produtos destinados ao público. Se as credenciais estiverem vazias, o cardápio mantém a API atual como fallback e informa que o Supabase ainda não foi configurado.
+
+`.env.local` é ignorado pelo Git. `.env.example` contém somente nomes de variáveis e pode ser versionado.
+
+## Desenvolvimento e build web
+
+```bash
+npm run dev
+```
+
+Esse comando prepara `www/` e inicia um servidor local em `http://127.0.0.1:4173`. Para gerar/atualizar apenas os arquivos web:
+
+```bash
+npm run build
+```
+
+O build copia as páginas e imagens, empacota o SDK oficial do Supabase e gera `www/supabase-config.js` a partir de `.env.local`. Sem credenciais, esse arquivo não contém valores de conexão.
+
+## Sincronizar e abrir Android
+
+Após alterar arquivos web ou `.env.local`, execute:
+
+```bash
 npm run build
 npx cap sync android
 ```
 
-`npm run build` copia as páginas, manifesto, service worker e imagens do projeto para `www/`. Repita `npm run build` e `npx cap sync android` sempre que alterar os arquivos web, antes de abrir/compilar o Android.
-
-## Abrir no Android Studio
+Para abrir no Android Studio:
 
 ```bash
 npx cap open android
 ```
 
-No Android Studio, aguarde a sincronização do Gradle e execute em um emulador ou dispositivo conectado.
-
 ## Gerar APK de debug
-
-No Windows:
-
-```bash
-cd android
-.\gradlew.bat assembleDebug
-```
-
-Ou, a partir da raiz do projeto:
 
 ```bash
 npm run android:debug
 ```
 
-O APK ficará em `android/app/build/outputs/apk/debug/app-debug.apk`.
-
-O identificador Android é `com.pastel.reimassa` e o nome exibido é `Rei da Massa`. O Capacitor usa `www/` como diretório web e `index.html` como entrada.
-
-
+O APK será criado em `android/app/build/outputs/apk/debug/app-debug.apk`.

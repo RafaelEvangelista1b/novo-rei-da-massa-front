@@ -5,11 +5,13 @@
   "description": "Cardapio digital Rei da Massa",
   "scripts": {
     "build": "node scripts/build.js",
-    "android:debug": "cd android && gradlew.bat assembleDebug"
+    "android:debug": "cd android && gradlew.bat assembleDebug",
+    "dev": "npm run build && node scripts/dev.js"
   },
   "dependencies": {
     "@capacitor/android": "6.2.1",
-    "@capacitor/core": "6.2.1"
+    "@capacitor/core": "6.2.1",
+    "@supabase/supabase-js": "^2.117.2"
   },
   "devDependencies": {
     "@capacitor/cli": "6.2.1"

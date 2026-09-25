@@ -37,6 +37,9 @@
             }
         }
     </script>
+    <script src="./vendor/supabase.js"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./src/lib/supabaseClient.js"></script>
 </head>
 
 <body class="font-nunito text-dark bg-cream">
@@ -135,6 +138,7 @@
             <div id="categorias-titulo" class="text-left font-extrabold text-2xl mb-4 font-playfair text-dark">
                 Carregando...
             </div>
+            <p id="supabase-status" class="hidden text-sm text-center text-amber-700 mb-4" aria-live="polite"></p>
             <div id="lista-produtos" class="grid grid-cols-2 gap-4"></div>
         </div>
 
@@ -147,6 +151,13 @@
         const categoriaTitulo = document.getElementById('categorias-titulo');
         let categoriasData = [];
         let categoriasAtivaId = null;
+        let produtosSupabaseCache = null;
+        const supabaseStatus = document.getElementById('supabase-status');
+
+        if (!window.reiSupabase) {
+            supabaseStatus.textContent = window.REI_SUPABASE_INIT_ERROR ? 'A configuracao do Supabase e invalida; exibindo o cardapio pela API atual.' : 'Supabase ainda nao configurado; exibindo o cardapio pela API atual.';
+            supabaseStatus.classList.remove('hidden');
+        }
 
         async function carregarCategorias() {
             try {
@@ -196,12 +207,35 @@
                     <div class="animate-spin rounded-full h-8 w-8 border-4 border-orange-100 border-t-primary"></div>
                 </div>`;
             try {
+                if (window.reiSupabase) {
+                    if (!produtosSupabaseCache) {
+                        const tableName = window.REI_SUPABASE_CONFIG.productsTable || 'produtos';
+                        const { data, error } = await window.reiSupabase.from(tableName).select('*');
+                        if (error) throw error;
+                        produtosSupabaseCache = data || [];
+                    }
+                    const produtos = produtosSupabaseCache.filter((produto) => {
+                        const produtoCategoriaId = produto.categoriaId ?? produto.categoria_id;
+                        return String(produtoCategoriaId) === String(categoriaId);
+                    });
+                    supabaseStatus.classList.add('hidden');
+                    renderizarProdutos(produtos);
+                    return;
+                }
+
                 const response = await fetch(`${API_URL}/produtos?categoriaId=${categoriaId}`);
+                if (!response.ok) throw new Error(`API respondeu ${response.status}`);
                 const produtos = await response.json();
                 renderizarProdutos(produtos);
             } catch (error) {
                 console.error('Erro ao carregar produtos:', error);
-                listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos.</p>';
+                if (window.reiSupabase) {
+                    supabaseStatus.textContent = 'Nao foi possivel carregar produtos do Supabase. Confira a tabela produtos e a politica de leitura (RLS).';
+                    supabaseStatus.classList.remove('hidden');
+                    listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos do cardapio.</p>';
+                } else {
+                    listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos.</p>';
+                }
             }
         }
 

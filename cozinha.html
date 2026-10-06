@@ -35,6 +35,9 @@
             background-color: #fdf8f2; /* Fundo creme/marfim idêntico ao da imagem */
         }
     </style>
+    <script src="./vendor/supabase.js"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./src/lib/supabaseClient.js"></script>
 </head>
 
 <body class="font-barlow text-dark w-full m-0 min-h-screen flex flex-col">
@@ -310,13 +313,36 @@
 
     <!-- JAVASCRIPT: Lógica do Painel de Controle -->
     <script>
-        // URL base da API unificada
+        // API de pedidos permanece como está; produtos e categorias usam Supabase.
         const API_URL = 'https://aula07-vercel-backpastel.vercel.app/api';
-        
-        // Rotas derivadas
         const URL_PEDIDOS = `${API_URL}/pedidos`;
-        const URL_PRODUTOS = `${API_URL}/produtos`;
-        const URL_CATEGORIAS = `${API_URL}/categorias`;
+        const supabase = window.reiSupabase;
+        const PRODUCTS_TABLE = (window.REI_SUPABASE_CONFIG && window.REI_SUPABASE_CONFIG.productsTable) || 'produtos';
+        const CATEGORIES_TABLE = (window.REI_SUPABASE_CONFIG && window.REI_SUPABASE_CONFIG.categoriesTable) || 'categorias';
+
+        function requireSupabase() {
+            if (!supabase) throw new Error('Supabase não configurado. Preencha VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY em .env.local e gere o build.');
+        }
+
+        function validarMutacaoSupabase(result) {
+            if (result.error) throw result.error;
+            if (!result.data || result.data.length === 0) {
+                throw new Error('Nenhuma linha foi alterada. Confira as permissões RLS e o acesso de escrita no Supabase.');
+            }
+        }
+
+        function produtoCategoriaId(produto) {
+            return produto.categoriaId ?? produto.categoria_id;
+        }
+
+        function colunaCategoriaProduto() {
+            const detectedColumn = produtosData.some(produto => Object.prototype.hasOwnProperty.call(produto, 'categoria_id'))
+                ? 'categoria_id'
+                : produtosData.some(produto => Object.prototype.hasOwnProperty.call(produto, 'categoriaId'))
+                    ? 'categoriaId'
+                    : null;
+            return detectedColumn || (window.REI_SUPABASE_CONFIG && window.REI_SUPABASE_CONFIG.productCategoryColumn) || 'categoriaId';
+        }
 
         // Controle de Abas
         let activeTab = 'pedidos';
@@ -584,9 +610,10 @@
         // Carregar categorias da API para popular o select
         async function carregarCategorias() {
             try {
-                const res = await fetch(URL_CATEGORIAS);
-                if (!res.ok) throw new Error("Erro ao buscar categorias");
-                categoriasData = await res.json();
+                requireSupabase();
+                const { data, error } = await supabase.from(CATEGORIES_TABLE).select('*').order('id');
+                if (error) throw error;
+                categoriasData = data || [];
                 
                 // Popular dropdown no formulário de produtos
                 const select = document.getElementById('prod-categoria');
@@ -621,9 +648,10 @@
                     await carregarCategorias();
                 }
 
-                const res = await fetch(URL_PRODUTOS);
-                if (!res.ok) throw new Error("Erro ao buscar produtos");
-                produtosData = await res.json();
+                requireSupabase();
+                const { data, error } = await supabase.from(PRODUCTS_TABLE).select('*').order('id');
+                if (error) throw error;
+                produtosData = data || [];
                 
                 renderizarProdutosCozinha(produtosData);
 
@@ -665,7 +693,7 @@
                 const imgSource = (p.imagem && p.imagem.startsWith('http')) ? p.imagem : `./img/${p.imagem || 'logo.png'}`;
                 
                 // Mapeamento de nome de categoria
-                const categoriaObj = categoriasData.find(cat => cat.id == p.categoriaId);
+                const categoriaObj = categoriasData.find(cat => cat.id == produtoCategoriaId(p));
                 const categoriaNome = categoriaObj ? categoriaObj.nome : 'Sem Categoria';
 
                 const card = `
@@ -725,7 +753,7 @@
                 if (prod) {
                     document.getElementById('prod-id').value = prod.id;
                     document.getElementById('prod-nome').value = prod.nome;
-                    document.getElementById('prod-categoria').value = prod.categoriaId;
+                    document.getElementById('prod-categoria').value = produtoCategoriaId(prod);
                     document.getElementById('prod-preco').value = prod.preco;
                     document.getElementById('prod-desc').value = prod.descricao || '';
                     document.getElementById('prod-imagem').value = prod.imagem || '';
@@ -753,7 +781,7 @@
 
             const id = document.getElementById('prod-id').value;
             const nome = document.getElementById('prod-nome').value;
-            const categoriaId = parseInt(document.getElementById('prod-categoria').value);
+            const categoriaId = document.getElementById('prod-categoria').value;
             const preco = parseFloat(document.getElementById('prod-preco').value);
             const imagem = document.getElementById('prod-imagem').value || 'logo.png';
             const descricao = document.getElementById('prod-desc').value;
@@ -765,11 +793,11 @@
 
             const payload = {
                 nome,
-                categoriaId,
                 preco,
                 imagem,
                 descricao
             };
+            payload[colunaCategoriaProduto()] = categoriaId;
 
             const btnSalvar = document.getElementById('btn-salvar-produto');
             const originalText = btnSalvar.innerText;
@@ -777,22 +805,12 @@
             btnSalvar.disabled = true;
 
             const isEdit = id !== '';
-            const url = isEdit ? `${URL_PRODUTOS}/${id}` : URL_PRODUTOS;
-            const method = isEdit ? 'PUT' : 'POST';
-
             try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || `Erro ao ${isEdit ? 'atualizar' : 'salvar'} produto`);
-                }
+                requireSupabase();
+                const result = isEdit
+                    ? await supabase.from(PRODUCTS_TABLE).update(payload).eq('id', id).select('id')
+                    : await supabase.from(PRODUCTS_TABLE).insert(payload).select('id');
+                validarMutacaoSupabase(result);
 
                 alert(`Produto ${isEdit ? 'atualizado' : 'cadastrado'} com sucesso!`);
                 fecharModalProduto();
@@ -837,14 +855,9 @@
             btnExcluir.disabled = true;
 
             try {
-                const response = await fetch(`${URL_PRODUTOS}/${productToDeleteId}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || "Erro ao excluir produto");
-                }
+                requireSupabase();
+                const result = await supabase.from(PRODUCTS_TABLE).delete().eq('id', productToDeleteId).select('id');
+                validarMutacaoSupabase(result);
 
                 alert("Produto excluído com sucesso!");
                 fecharModalDelete();
@@ -873,9 +886,10 @@
 
                 container.innerHTML = '<p class="text-muted col-span-full text-center py-10 animate-pulse">Carregando categorias...</p>';
 
-                const res = await fetch(URL_CATEGORIAS);
-                if (!res.ok) throw new Error("Erro ao buscar categorias");
-                categoriasData = await res.json();
+                requireSupabase();
+                const { data, error } = await supabase.from(CATEGORIES_TABLE).select('*').order('id');
+                if (error) throw error;
+                categoriasData = data || [];
 
                 renderizarCategoriasCozinha(categoriasData);
 
@@ -999,22 +1013,12 @@
             btnSalvar.disabled = true;
 
             const isEdit = id !== '';
-            const url = isEdit ? `${URL_CATEGORIAS}/${id}` : URL_CATEGORIAS;
-            const method = isEdit ? 'PUT' : 'POST';
-
             try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || `Erro ao ${isEdit ? 'atualizar' : 'salvar'} categoria`);
-                }
+                requireSupabase();
+                const result = isEdit
+                    ? await supabase.from(CATEGORIES_TABLE).update(payload).eq('id', id).select('id')
+                    : await supabase.from(CATEGORIES_TABLE).insert(payload).select('id');
+                validarMutacaoSupabase(result);
 
                 alert(`Categoria ${isEdit ? 'atualizada' : 'cadastrada'} com sucesso!`);
                 fecharModalCategoria();
@@ -1059,14 +1063,9 @@
             btnExcluir.disabled = true;
 
             try {
-                const response = await fetch(`${URL_CATEGORIAS}/${categoryToDeleteId}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(errData.error || "Erro ao excluir categoria");
-                }
+                requireSupabase();
+                const result = await supabase.from(CATEGORIES_TABLE).delete().eq('id', categoryToDeleteId).select('id');
+                validarMutacaoSupabase(result);
 
                 alert("Categoria excluída com sucesso!");
                 fecharModalDeleteCat();

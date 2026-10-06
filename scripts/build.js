@@ -23,6 +23,8 @@ if (fs.existsSync(envPath)) {
 const supabaseUrl = env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || '';
 const productsTable = env.SUPABASE_PRODUCTS_TABLE || 'produtos';
+const categoriesTable = env.SUPABASE_CATEGORIES_TABLE || 'categorias';
+const productCategoryColumn = env.SUPABASE_PRODUCT_CATEGORY_COLUMN || 'categoriaId';
 
 if (supabaseAnonKey.split('.').length === 3) {
   try {
@@ -54,6 +56,8 @@ const clientConfig = {
   url: supabaseUrl,
   anonKey: supabaseAnonKey,
   productsTable,
+  categoriesTable,
+  productCategoryColumn,
 };
 fs.writeFileSync(
   path.join(output, 'supabase-config.js'),

@@ -161,15 +161,23 @@
 
         async function carregarCategorias() {
             try {
-                const response = await fetch(`${API_URL}/categorias`);
-                categoriasData = await response.json();
+                if (window.reiSupabase) {
+                    const tableName = window.REI_SUPABASE_CONFIG.categoriesTable || 'categorias';
+                    const { data, error } = await window.reiSupabase.from(tableName).select('*').order('id');
+                    if (error) throw error;
+                    categoriasData = data || [];
+                } else {
+                    const response = await fetch(`${API_URL}/categorias`);
+                    if (!response.ok) throw new Error(`API respondeu ${response.status}`);
+                    categoriasData = await response.json();
+                }
                 renderizarBotoesCategorias();
                 if (categoriasData.length > 0) {
                     selecionarCategoria(categoriasData[0].id, categoriasData[0].nome);
                 }
             } catch (error) {
                 console.error('Erro ao carregar as categorias:', error);
-                navCategorias.innerHTML = '<p class="text-red-500">Erro ao carregar menu.</p>';
+                navCategorias.innerHTML = `<p class="text-red-500">${window.reiSupabase ? 'Erro ao carregar categorias do Supabase. Confira a tabela categorias e a politica de leitura (RLS).' : 'Erro ao carregar menu.'}</p>`;
             }
         }
 
@@ -179,7 +187,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'snap-start px-5 py-2 rounded-full font-bold text-sm transition-all duration-150 cursor-pointer flex-shrink-0 btn-cat bg-orange-100 text-dark';
                 btn.innerText = cat.nome;
-                btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
+                btn.onclick = () => selecionarCategoria(btn.dataset.id, cat.nome);
                 btn.dataset.id = cat.id;
                 navCategorias.appendChild(btn);
             });
@@ -190,7 +198,7 @@
             categoriaTitulo.innerHTML = nome;
             const botoes = document.querySelectorAll('.btn-cat');
             botoes.forEach(btn => {
-                if (parseInt(btn.dataset.id) === id) {
+                if (String(btn.dataset.id) === String(id)) {
                     btn.classList.add('bg-primary', 'text-white');
                     btn.classList.remove('bg-orange-100', 'text-dark');
                 } else {

@@ -22,11 +22,13 @@ Copie `.env.example` para `.env.local` e preencha:
 VITE_SUPABASE_URL=https://SEU-PROJETO.supabase.co
 VITE_SUPABASE_ANON_KEY=SUA_CHAVE_PUBLICA
 SUPABASE_PRODUCTS_TABLE=produtos
+SUPABASE_CATEGORIES_TABLE=categorias
+SUPABASE_PRODUCT_CATEGORY_COLUMN=categoriaId
 ```
 
 Use somente a chave pública/anon apropriada para clientes. Nunca use `service_role`: o build bloqueia uma chave JWT com essa role. A URL e a chave pública serão incluídas nos arquivos web e no APK; proteja os dados com RLS no Supabase.
 
-O cardápio executa `SELECT *` na tabela configurada (por padrão, `produtos`) e exibe os produtos para a categoria selecionada. O código existente sugere os campos `id`, `nome`, `preco`, `descricao`, `imagem` e `categoriaId` ou `categoria_id`. A leitura depende de uma política RLS que permita selecionar os produtos destinados ao público. Se as credenciais estiverem vazias, o cardápio mantém a API atual como fallback e informa que o Supabase ainda não foi configurado.
+O cardápio lê os produtos da tabela configurada (por padrão, `produtos`) e as categorias (por padrão, `categorias`). O painel `cozinha.html` permite cadastrar, editar e excluir produtos e categorias diretamente no Supabase. Os campos esperados para produtos são `id`, `nome`, `preco`, `descricao`, `imagem` e `categoriaId` ou `categoria_id`; configure `SUPABASE_PRODUCT_CATEGORY_COLUMN` se sua tabela estiver vazia e usar `categoria_id`. Configure políticas RLS de leitura para o cardápio e políticas adequadas de escrita para o painel. Se as credenciais estiverem vazias, o cardápio público mantém a API atual como fallback; o CRUD do painel requer Supabase configurado.
 
 `.env.local` é ignorado pelo Git. `.env.example` contém somente nomes de variáveis e pode ser versionado.
 

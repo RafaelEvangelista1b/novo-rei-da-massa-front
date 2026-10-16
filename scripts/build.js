@@ -37,7 +37,7 @@ if (supabaseAnonKey.split('.').length === 3) {
   }
 }
 
-const entries = ['index.html', 'cozinha.html', 'manifest.json', 'sw.js', 'assets', 'src'];
+const entries = ['index.html', 'cozinha.html', 'admin.html', 'manifest.json', 'sw.js', 'assets', 'src'];
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 
@@ -66,3 +66,13 @@ fs.writeFileSync(
 
 console.log('Arquivos web e SDK do Supabase copiados para www/.');
 console.log(supabaseUrl && supabaseAnonKey ? 'Configuracao Supabase incluida no build.' : 'Credenciais Supabase ausentes; configure .env.local antes de usar o Supabase.');
+
+require('esbuild').buildSync({
+  entryPoints: [path.join(root, 'src', 'admin-app.jsx')],
+  bundle: true,
+  minify: true,
+  platform: 'browser',
+  target: ['es2020'],
+  outfile: path.join(output, 'admin.js'),
+});
+console.log('Painel React empacotado em www/admin.js.');

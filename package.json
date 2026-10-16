@@ -6,14 +6,24 @@
   "scripts": {
     "build": "node scripts/build.js",
     "android:debug": "cd android && gradlew.bat assembleDebug",
-    "dev": "npm run build && node scripts/dev.js"
+    "dev": "npm run build && node scripts/dev.js",
+    "check:supabase": "node scripts/check-supabase.mjs",
+    "postinstall": "node scripts/patch-capacitor-cli-tar.js"
   },
   "dependencies": {
-    "@capacitor/android": "6.2.1",
-    "@capacitor/core": "6.2.1",
-    "@supabase/supabase-js": "^2.117.2"
+    "@capacitor/android": "6.2.2",
+    "@capacitor/app": "^6.0.3",
+    "@capacitor/browser": "^6.0.6",
+    "@capacitor/core": "6.2.2",
+    "@supabase/supabase-js": "^2.117.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.2.1"
+    "@capacitor/cli": "6.2.2",
+    "esbuild": "^0.28.2"
+  },
+  "overrides": {
+    "tar": "^7.5.21"
   }
 }

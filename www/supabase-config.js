@@ -1,0 +1,1 @@
+window.REI_SUPABASE_CONFIG = {"url":"https://yorubaiclsseemxtozmw.supabase.co","anonKey":"sb_publishable_8QpBGoeC9hP_3PbYmxK1nA_Wcm5dR3l","productsTable":"produtos","categoriesTable":"categorias","productCategoryColumn":"categoria_id"};

@@ -214,7 +214,7 @@ function CatalogAdmin() {
 
   const rows = tab === 'produtos' ? products : categories;
   const profile = user?.user_metadata || {};
-  const displayName = profile.full_name || user?.email || 'Administrador';
+  const displayName = profile.full_name || profile.name || user?.email || 'Administrador';
   return <main className="mx-auto max-w-6xl p-4 sm:p-8">
     <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div><a className="text-sm text-orange-800 underline" href="./index.html">← Voltar ao cardápio</a><h1 className="mt-2 text-3xl font-black">Gerenciar cardápio</h1><a className="text-sm text-orange-800 underline" href="./cozinha.html">Abrir painel da cozinha</a></div>

@@ -1,9 +1,18 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
+export function SessionLoading() {
+  return <main className="flex min-h-screen items-center justify-center bg-orange-50 px-6" role="status" aria-live="polite">
+    <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-8 py-7 text-center shadow-sm">
+      <span className="h-9 w-9 animate-spin rounded-full border-4 border-orange-200 border-t-orange-700" aria-hidden="true" />
+      <p className="font-semibold text-stone-700">Verificando sua sessão…</p>
+    </div>
+  </main>;
+}
+
 export function ProtectedRoute({ children, onUnauthenticated }) {
   const { user, loading, isAdmin } = useAuth();
-  if (loading) return <main className="mx-auto max-w-xl p-8" role="status">Verificando sessão…</main>;
+  if (loading) return <SessionLoading />;
   if (!user) return onUnauthenticated ? onUnauthenticated() : null;
   if (!isAdmin) return <AccessDenied />;
   return children;
@@ -11,7 +20,7 @@ export function ProtectedRoute({ children, onUnauthenticated }) {
 
 export function GuestRoute({ children }) {
   const { loading, isAdmin } = useAuth();
-  if (loading) return <main className="mx-auto max-w-xl p-8" role="status">Verificando sessão…</main>;
+  if (loading) return <SessionLoading />;
   if (isAdmin) return <main className="mx-auto max-w-xl p-8" role="status">Acesso autorizado. Abrindo painel…</main>;
   return children;
 }

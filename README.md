@@ -48,6 +48,19 @@ npm run build
 
 O build copia as páginas e imagens, empacota o SDK oficial do Supabase e o painel React, e gera `www/supabase-config.js` a partir de `.env.local`. Sem credenciais, esse arquivo não contém valores de conexão.
 
+## Persistência de Sessão e Auto-Login
+
+O estado React (user, session e loading) fica na memória e desaparece quando o processo do app termina. Para restaurá-lo na próxima abertura, o cliente Supabase usa @capacitor/preferences como armazenamento de sessão do próprio SDK, com a chave supabase_session. Assim há um único mecanismo responsável por salvar e renovar os tokens; o AuthContext apenas acompanha os eventos do SDK e inicializa seu estado com supabase.auth.getSession().
+
+No Android, Preferences grava no armazenamento nativo SharedPreferences; no iOS, em UserDefaults; no navegador, o plugin fornece compatibilidade web. Preferences não é um cofre criptográfico. O app nunca grava senha ou imprime tokens no console.
+
+persistSession e autoRefreshToken ficam habilitados. Ao abrir o app, o Supabase lê a sessão persistida e tenta renovar tokens expirados. O contexto mantém loading ativo até getSession() terminar, e as rotas protegidas exibem “Verificando sessão…” durante esse período. Se não houver sessão válida, o login continua sendo exibido. O retorno OAuth do Google no Android segue usando o deep link já configurado e a sessão resultante é persistida pelo mesmo SDK.
+
+O logout usa o escopo local do Supabase para remover a sessão deste dispositivo. Preferências não relacionadas à autenticação não são apagadas. Se o armazenamento falhar, o app registra apenas a falha operacional e as rotas continuam protegidas pelo estado de autenticação.
+
+@capacitor/preferences é instalado na versão principal 6 para acompanhar @capacitor/core 6.2.2. Para instalar dependências e sincronizar Android, execute npm install e npx cap sync android.
+
+Para verificar no dispositivo, instale o app Android, entre com uma conta autorizada, feche o app completamente e abra-o novamente. O painel verifica a sessão antes de liberar as rotas protegidas. Faça logout, feche e reabra; o login deverá ser solicitado. Também teste Google OAuth com as URLs de retorno configuradas na seção abaixo. npm run build valida o bundle web; o encerramento e reinício precisam ser verificados no dispositivo Android.
 ## Supabase Auth e Google OAuth
 
 1. Em Supabase **Authentication → Sign In / Providers**, habilite Email. Configure confirmação de e-mail conforme a política do projeto.

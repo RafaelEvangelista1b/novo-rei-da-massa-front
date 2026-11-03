@@ -47,11 +47,6 @@ for (const entry of entries) {
   fs.cpSync(source, path.join(output, entry), { recursive: true });
 }
 
-const sdkSource = path.join(root, 'node_modules', '@supabase', 'supabase-js', 'dist', 'umd', 'supabase.js');
-if (!fs.existsSync(sdkSource)) throw new Error('SDK do Supabase ausente. Execute npm install.');
-fs.mkdirSync(path.join(output, 'vendor'), { recursive: true });
-fs.copyFileSync(sdkSource, path.join(output, 'vendor', 'supabase.js'));
-
 const clientConfig = {
   url: supabaseUrl,
   anonKey: supabaseAnonKey,
@@ -64,9 +59,18 @@ fs.writeFileSync(
   `window.REI_SUPABASE_CONFIG = ${JSON.stringify(clientConfig)};\n`,
 );
 
-console.log('Arquivos web e SDK do Supabase copiados para www/.');
+console.log('Arquivos web copiados para www/.');
 console.log(supabaseUrl && supabaseAnonKey ? 'Configuracao Supabase incluida no build.' : 'Credenciais Supabase ausentes; configure .env.local antes de usar o Supabase.');
 
+require('esbuild').buildSync({
+  entryPoints: [path.join(root, 'src', 'lib', 'supabaseClient.js')],
+  bundle: true,
+  minify: true,
+  platform: 'browser',
+  target: ['es2020'],
+  outfile: path.join(output, 'supabase-client.js'),
+});
+console.log('Cliente Supabase empacotado com armazenamento Capacitor Preferences.');
 require('esbuild').buildSync({
   entryPoints: [path.join(root, 'src', 'admin-app.jsx')],
   bundle: true,

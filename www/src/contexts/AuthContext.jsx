@@ -135,7 +135,7 @@ export function AuthProvider({ children }) {
     },
     async signOut() {
       if (!supabase) return { error: new Error('Supabase não está configurado.') };
-      const result = await supabase.auth.signOut();
+      const result = await supabase.auth.signOut({ scope: 'local' });
       if (!result.error) setSession(null);
       return result;
     },
